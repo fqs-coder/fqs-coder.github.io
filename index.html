@@ -447,6 +447,31 @@
     }
     .tl-card .advisor { font-size: 14px; color: var(--ink-mute); margin-bottom: 10px; }
     .tl-card p { font-size: 15px; color: var(--ink-soft); }
+    .tl-card p + p { margin-top: 10px; }
+
+    /* =========================================================
+       7.5 荣誉奖励
+       ========================================================= */
+    .honor-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .honor-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 20px 22px;
+      box-shadow: var(--shadow-sm);
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s;
+    }
+    .honor-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(11, 61, 145, .22);
+    }
+    .honor-card .dot { color: var(--blue); font-weight: 800; line-height: 1.6; }
+    .honor-name { font-size: 15px; font-weight: 600; color: var(--ink); }
+    .honor-level { font-size: 13px; color: var(--ink-mute); margin-top: 3px; }
 
     /* =========================================================
        8. 页脚
@@ -520,6 +545,7 @@
       .nav-links a { padding: 13px 16px; font-size: 16px; }
 
       .stat-grid { grid-template-columns: 1fr; }
+      .honor-grid { grid-template-columns: 1fr; }
       .about-card { padding: 30px 24px; }
       .tl-card { padding: 22px 20px; }
       .hero .cta { flex-direction: column; align-items: center; }
@@ -541,6 +567,7 @@
         <a href="#about">关于我</a>
         <a href="#academic">学业成绩</a>
         <a href="#research">科研经历</a>
+        <a href="#honors">荣誉奖励</a>
         <a href="#contact">联系我</a>
       </nav>
 
@@ -556,7 +583,7 @@
       <div class="container">
         <p class="eyebrow fade">Personal Portfolio</p>
         <h1 class="fade">你好，我是 <span class="grad">付磬菘</span></h1>
-        <p class="subtitle fade">北京邮电大学 · 未来学院 · 2025级本科生</p>
+        <p class="subtitle fade">北京邮电大学 · 未来学院 · 计算机类（元班）· 2025级本科生</p>
         <p class="intro fade">踏实深耕，向新而行。在数学基础与大模型技术的交叉点上持续探索。</p>
         <div class="cta fade">
           <!-- TODO: 如有简历 PDF，把下方 href 替换为简历链接 -->
@@ -582,6 +609,26 @@
             热爱英文歌曲、烹饪烘焙与爬山徒步。喜欢在课余时学技术，
             将数学理论转化为实际应用。
           </p>
+          <p>
+            科研兴趣：<strong>大模型安全、可信 AI</strong>。我会投入充足的时间进入课题研究，
+            能平衡好科研学习与生活；自学能力强，对项目任务认真负责，善于沟通，团队协作能力强。
+          </p>
+        </div>
+
+        <div class="courses reveal">
+          <h3 class="courses-title">专业技能</h3>
+          <div class="tag-cloud">
+            <span class="course-tag">Python</span>
+            <span class="course-tag">C/C++</span>
+            <span class="course-tag">Java</span>
+            <span class="course-tag">PyTorch</span>
+            <span class="course-tag">Transformers</span>
+            <span class="course-tag">Node.js</span>
+            <span class="course-tag">MySQL</span>
+            <span class="course-tag">Vue 3</span>
+            <span class="course-tag">Codex</span>
+            <span class="course-tag">Overleaf</span>
+          </div>
         </div>
       </div>
     </section>
@@ -597,7 +644,7 @@
         <!-- 四个数据卡片 -->
         <div class="stat-grid">
           <div class="stat-card reveal">
-            <div class="stat-value">1 <small>/ 53</small></div>
+            <div class="stat-value">1 <small>/ 20</small></div>
             <div class="stat-label">专业排名</div>
             <div class="stat-note">加权平均分 88.99</div>
           </div>
@@ -622,11 +669,11 @@
         <div class="courses reveal">
           <h3 class="courses-title">高分课程</h3>
           <div class="tag-cloud">
-            <span class="course-tag">数学分析(二) <b>96</b></span>
+            <span class="course-tag">数学分析(下) <b>97</b></span>
             <span class="course-tag">数学分析选讲(二) <b>98</b></span>
             <span class="course-tag">高等代数(下) <b>94</b></span>
-            <span class="course-tag">空间解析几何 <b>94</b></span>
             <span class="course-tag">大学物理B(上) <b>94</b></span>
+            <span class="course-tag">大学物理实验 <b>优</b></span>
           </div>
         </div>
       </div>
@@ -650,7 +697,8 @@
               </div>
               <h3>《基于辩论机制的多Agent协作推理增强系统》</h3>
               <p class="advisor">指导老师：全辉</p>
-              <p>负责项目选题与统筹。</p>
+              <p>针对大语言模型在复杂推理中幻觉频发、自纠错能力不足的问题，构建“正方—反方—裁判”三角色辩论框架，以交叉验证和对抗质疑提升推理可靠性，并探究辩论轮次等对效果的影响，最终搭建可视化多Agent辩论平台，为高风险场景下的安全部署提供新范式。</p>
+              <p>主要负责将多Agent辩论过程建模为随机过程，同时进行进度统筹、结果收敛性分析以及论文与报告撰写。</p>
             </div>
           </div>
 
@@ -661,9 +709,10 @@
                 <span class="badge">学院双创项目</span>
                 <span class="badge ghost">核心成员</span>
               </div>
-              <h3>《医学大模型研究中的多模态智能中医系统》</h3>
+              <h3>《医学大模型中多模态智能中医系统》</h3>
               <p class="advisor">指导老师：李若泰</p>
-              <p>参与数据处理与模型应用研究。</p>
+              <p>由学院牵头，依托原大创项目基础以及 RAG 检索增强等技术，搭建中医自建数据库，研发多Agent协同问诊、舌面诊识别等一体化解决方案。</p>
+              <p>主要负责搭建知识数据库，设计知识图谱路径规划出题算法以及后端 FastAPI 服务封装与 API 接口开发，完成数据库部署、系统测试与技术文档撰写。</p>
             </div>
           </div>
 
@@ -671,24 +720,59 @@
           <div class="tl-item reveal">
             <div class="tl-card">
               <div class="tl-meta">
-                <span class="badge">雏燕计划</span>
-                <span class="badge ghost">成员 · 已结项</span>
+                <span class="badge">自主探索</span>
+                <span class="badge ghost">全栈开发</span>
               </div>
-              <h3>《Code Quest》</h3>
+              <h3>数学学习平台自主搭建</h3>
+              <p>利用 AI 独立完成前后端全栈开发与部署：前端基于 Vue 3 + Element Plus 实现练习、错题本、预习、总结、资料等模块；后端基于 Node.js + Express + MySQL 设计三层架构与 RESTful API，接入阿里云百炼大模型并通过 SSE 实现 AI 流式答疑。</p>
+              <p>此外还自学大语言模型与 Agent 课程，并基于阿里云服务器开发部署个人网站。</p>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
 
-          <!-- 项目 4 -->
-          <div class="tl-item reveal">
-            <div class="tl-card">
-              <div class="tl-meta">
-                <span class="badge">自主探索</span>
-              </div>
-              <h3>自我驱动 · 持续精进</h3>
-              <p>
-                自学大语言模型与Agent课程；搭建两个数学学习平台（含Coze平台搭建）；
-                基于阿里云服务器开发部署个人网站。
-              </p>
+    <!-- ===================== 荣誉奖励 ===================== -->
+    <section id="honors">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="tag">荣誉奖励</span>
+          <h2>获奖与荣誉</h2>
+        </div>
+        <div class="honor-grid">
+          <div class="honor-card reveal">
+            <span class="dot">◆</span>
+            <div>
+              <div class="honor-name">国家奖学金</div>
+              <div class="honor-level">国家级 · 2026</div>
+            </div>
+          </div>
+          <div class="honor-card reveal">
+            <span class="dot">◆</span>
+            <div>
+              <div class="honor-name">“明日之星”英语大赛</div>
+              <div class="honor-level">演讲组二等奖</div>
+            </div>
+          </div>
+          <div class="honor-card reveal">
+            <span class="dot">◆</span>
+            <div>
+              <div class="honor-name">跨文化能力与国际胜任力</div>
+              <div class="honor-level">校园选拔赛奖项</div>
+            </div>
+          </div>
+          <div class="honor-card reveal">
+            <span class="dot">◆</span>
+            <div>
+              <div class="honor-name">全国中学生数学奥林匹克竞赛</div>
+              <div class="honor-level">省级三等奖</div>
+            </div>
+          </div>
+          <div class="honor-card reveal">
+            <span class="dot">◆</span>
+            <div>
+              <div class="honor-name">化学奥林匹克竞赛</div>
+              <div class="honor-level">省级二等奖</div>
             </div>
           </div>
         </div>
@@ -702,7 +786,7 @@
       <p class="thanks">感谢您的访问。</p>
       <div class="contact">
         <span>电话 <a href="tel:13668750688">13668750688</a></span>
-        <span>邮箱 <a href="mailto:2025212596@bupt.cn">2025212596@bupt.cn</a></span>
+        <span>邮箱 <a href="mailto:2025212596@bupt.edu.cn">2025212596@bupt.edu.cn</a></span>
       </div>
       <p class="motto">“We must know. We will know.” —— David Hilbert</p>
       <p class="copyright">© 2026 付磬菘. All Rights Reserved.</p>
