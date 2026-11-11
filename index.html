@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="付磬菘 · 北京邮电大学未来学院 2025 级本科生个人主页" />
+  <title>付磬菘 · Personal Portfolio</title>
+
+  <style>
+    /* =========================================================
+       0. 设计变量（Design Tokens）
+       以「北邮蓝」为主色，白色 + 浅灰为辅，克制、干净。
+       ========================================================= */
+    :root {
+      --blue:        #0B3D91;   /* 主色：北邮深蓝 */
+      --blue-dark:   #072A68;   /* 更深的蓝（悬停/页脚） */
+      --blue-soft:   #2E6BDB;   /* 辅助亮蓝 */
+      --blue-tint:   #E8EFFA;   /* 蓝色浅底（标签云） */
+      --ink:         #0E1A2B;   /* 主文字 */
+      --ink-soft:    #46546B;   /* 次级文字 */
+      --ink-mute:    #7A8699;   /* 弱化文字 */
+      --bg:          #F5F7FB;   /* 页面浅灰底 */
+      --card:        #FFFFFF;   /* 卡片白 */
+      --line:        #E6EAF2;   /* 分割线 */
+      --radius:      18px;
+      --radius-sm:   12px;
+      --shadow-sm:   0 1px 2px rgba(14, 26, 43, .04), 0 4px 14px rgba(14, 26, 43, .05);
+      --shadow-hover: 0 10px 30px rgba(11, 61, 145, .14), 0 4px 12px rgba(14, 26, 43, .08);
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC",
+              "Helvetica Neue", "Segoe UI", "Microsoft YaHei", sans-serif;
+      --maxw: 1080px;
+      --ease: cubic-bezier(.22, .61, .36, 1);
+    }
+
+    /* =========================================================
+       1. 基础重置
+       ========================================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: var(--font);
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    img { display: block; max-width: 100%; }
+
+    ::selection { background: var(--blue); color: #fff; }
+
+    /* 可访问性：键盘焦点可见 */
+    :focus-visible { outline: 2px solid var(--blue-soft); outline-offset: 3px; border-radius: 4px; }
+
+    /* 尊重「减少动态效果」系统设置 */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .001s !important; transition-duration: .001s !important; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* =========================================================
+       2. 通用布局组件
+       ========================================================= */
+    .container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+    section { padding: 96px 0; }
+
+    /* 章节标题：小标签胶囊 + 大标题 */
+    .section-head { margin-bottom: 48px; }
+    .section-head .tag {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      color: var(--blue);
+      background: var(--blue-tint);
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+    .section-head h2 {
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: 700;
+      letter-spacing: -.01em;
+      color: var(--ink);
+    }
+
+    /* 滚动渐显动画（由 IntersectionObserver 触发） */
+    .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity .7s var(--ease), transform .7s var(--ease);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* =========================================================
+       3. 顶部导航栏
+       ========================================================= */
+    .navbar {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, .82);
+      backdrop-filter: saturate(180%) blur(16px);
+      -webkit-backdrop-filter: saturate(180%) blur(16px);
+      border-bottom: 1px solid transparent;
+      transition: border-color .3s, box-shadow .3s;
+    }
+    .navbar.scrolled {
+      border-bottom-color: var(--line);
+      box-shadow: 0 6px 24px rgba(14, 26, 43, .06);
+    }
+    .navbar .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+    .brand {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: .01em;
+      color: var(--ink);
+    }
+    .brand .cn { color: var(--blue); }
+    .brand .en {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-mute);
+      margin-left: 8px;
+      letter-spacing: .04em;
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 6px; }
+    .nav-links a {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink-soft);
+      padding: 8px 14px;
+      border-radius: 10px;
+      transition: color .25s, background .25s;
+    }
+    .nav-links a:hover { color: var(--blue); background: var(--blue-tint); }
+
+    /* 汉堡按钮（仅移动端显示） */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 42px;
+      height: 42px;
+      padding: 10px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    .nav-toggle span {
+      display: block;
+      height: 2px;
+      width: 100%;
+      background: var(--ink);
+      border-radius: 2px;
+      transition: transform .3s, opacity .3s;
+    }
+    .nav-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.active span:nth-child(2) { opacity: 0; }
+    .nav-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* =========================================================
+       4. 首屏 Hero
+       ========================================================= */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      padding: 160px 0 120px;
+      background:
+        radial-gradient(1100px 560px at 50% -12%, rgba(46, 107, 219, .14), transparent 62%),
+        radial-gradient(760px 420px at 86% 22%, rgba(11, 61, 145, .09), transparent 55%),
+        var(--bg);
+      overflow: hidden;
+    }
+    /* 淡雅的网格纹理，营造科技感 */
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(11, 61, 145, .05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(11, 61, 145, .05) 1px, transparent 1px);
+      background-size: 44px 44px;
+      -webkit-mask-image: radial-gradient(60% 60% at 50% 40%, #000 0%, transparent 100%);
+      mask-image: radial-gradient(60% 60% at 50% 40%, #000 0%, transparent 100%);
+      pointer-events: none;
+    }
+    .hero .container { position: relative; }
+
+    .hero .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--blue-soft);
+      margin-bottom: 28px;
+    }
+    .hero .eyebrow::before,
+    .hero .eyebrow::after {
+      content: "";
+      width: 22px;
+      height: 1px;
+      background: var(--blue-soft);
+      opacity: .5;
+    }
+
+    .hero h1 {
+      font-size: clamp(40px, 7.5vw, 72px);
+      font-weight: 800;
+      letter-spacing: -.02em;
+      line-height: 1.08;
+      margin-bottom: 22px;
+    }
+    .hero h1 .grad {
+      background: linear-gradient(120deg, var(--blue), var(--blue-soft));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero .subtitle {
+      font-size: clamp(16px, 2.4vw, 20px);
+      font-weight: 500;
+      color: var(--ink-soft);
+      margin-bottom: 18px;
+      letter-spacing: .01em;
+    }
+    .hero .intro {
+      max-width: 620px;
+      margin: 0 auto 40px;
+      font-size: clamp(15px, 1.8vw, 17px);
+      color: var(--ink-mute);
+    }
+
+    .hero .cta { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 13px 28px;
+      border-radius: 999px;
+      transition: transform .25s var(--ease), box-shadow .25s, background .25s, color .25s;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--blue);
+      color: #fff;
+      box-shadow: 0 8px 22px rgba(11, 61, 145, .28);
+    }
+    .btn-primary:hover {
+      background: var(--blue-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(11, 61, 145, .34);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--blue);
+      border: 1.5px solid rgba(11, 61, 145, .35);
+    }
+    .btn-ghost:hover {
+      background: var(--blue-tint);
+      border-color: var(--blue);
+      transform: translateY(-2px);
+    }
+
+    /* 首屏各元素依次渐显 */
+    .hero .fade { opacity: 0; animation: fadeUp .8s var(--ease) forwards; }
+    .hero .fade:nth-child(1) { animation-delay: .05s; }
+    .hero .fade:nth-child(2) { animation-delay: .16s; }
+    .hero .fade:nth-child(3) { animation-delay: .28s; }
+    .hero .fade:nth-child(4) { animation-delay: .4s; }
+    .hero .fade:nth-child(5) { animation-delay: .52s; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* =========================================================
+       5. 关于我
+       ========================================================= */
+    .about-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 44px 48px;
+      box-shadow: var(--shadow-sm);
+      font-size: 17px;
+      line-height: 1.9;
+      color: var(--ink-soft);
+      max-width: 820px;
+    }
+    .about-card p + p { margin-top: 16px; }
+    .about-card strong { color: var(--ink); font-weight: 600; }
+
+    /* =========================================================
+       6. 学业成绩
+       ========================================================= */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 30px 24px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s;
+    }
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(11, 61, 145, .22);
+    }
+    .stat-value {
+      font-size: clamp(30px, 4vw, 42px);
+      font-weight: 800;
+      letter-spacing: -.02em;
+      color: var(--blue);
+      line-height: 1.15;
+      margin-bottom: 10px;
+    }
+    .stat-value small { font-size: .52em; font-weight: 700; color: var(--ink-mute); }
+    .stat-label { font-size: 15px; font-weight: 600; color: var(--ink); }
+    .stat-note { font-size: 13px; color: var(--ink-mute); margin-top: 6px; }
+
+    /* 高分课程标签云 */
+    .courses { margin-top: 44px; }
+    .courses-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 18px;
+      letter-spacing: .02em;
+    }
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 12px; }
+    .course-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue-tint);
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 500;
+      padding: 10px 16px;
+      border-radius: 999px;
+      transition: transform .25s var(--ease), box-shadow .25s, background .25s;
+    }
+    .course-tag b {
+      font-weight: 700;
+      color: var(--blue);
+      font-size: 15px;
+    }
+    .course-tag:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+      background: #dde8f8;
+    }
+
+    /* =========================================================
+       7. 科研与项目经历（时间轴）
+       ========================================================= */
+    .timeline { position: relative; padding-left: 34px; }
+    /* 纵向轴线 */
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 7px;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: linear-gradient(var(--blue-soft), rgba(46, 107, 219, .1));
+      border-radius: 2px;
+    }
+    .tl-item { position: relative; padding-bottom: 30px; }
+    .tl-item:last-child { padding-bottom: 0; }
+    /* 节点圆点 */
+    .tl-item::before {
+      content: "";
+      position: absolute;
+      left: -34px;
+      top: 8px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      border: 4px solid var(--blue);
+      box-shadow: 0 0 0 4px var(--blue-tint);
+    }
+    .tl-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px 30px;
+      box-shadow: var(--shadow-sm);
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s;
+    }
+    .tl-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(11, 61, 145, .22);
+    }
+    .tl-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: .02em;
+      color: var(--blue);
+      background: var(--blue-tint);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+    .badge.ghost { color: var(--ink-soft); background: var(--bg); }
+    .tl-card h3 {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 6px;
+      letter-spacing: -.01em;
+    }
+    .tl-card .advisor { font-size: 14px; color: var(--ink-mute); margin-bottom: 10px; }
+    .tl-card p { font-size: 15px; color: var(--ink-soft); }
+
+    /* =========================================================
+       8. 页脚
+       ========================================================= */
+    .footer {
+      background: var(--blue-dark);
+      color: rgba(255, 255, 255, .85);
+      text-align: center;
+      padding: 72px 24px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .footer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(700px 320px at 50% 0%, rgba(46, 107, 219, .35), transparent 65%);
+      pointer-events: none;
+    }
+    .footer .container { position: relative; }
+    .footer .thanks { font-size: clamp(22px, 3vw, 28px); font-weight: 700; color: #fff; margin-bottom: 24px; }
+    .footer .contact { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px 28px; font-size: 15px; margin-bottom: 28px; }
+    .footer .contact a { transition: color .25s; }
+    .footer .contact a:hover { color: #fff; }
+    .footer .contact span { display: inline-flex; align-items: center; gap: 7px; }
+    .footer .motto { font-size: 15px; font-style: italic; color: rgba(255, 255, 255, .72); margin-bottom: 36px; }
+    .footer .copyright {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .5);
+      border-top: 1px solid rgba(255, 255, 255, .12);
+      padding-top: 26px;
+    }
+
+    /* =========================================================
+       9. 响应式
+       ========================================================= */
+    @media (max-width: 960px) {
+      section { padding: 72px 0; }
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      section { padding: 60px 0; }
+      .container { padding: 0 20px; }
+      .hero { padding: 140px 0 90px; }
+
+      /* 移动端导航：折叠为抽屉 */
+      .nav-toggle { display: flex; }
+      .nav-links {
+        position: absolute;
+        top: 68px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+        padding: 12px 20px 20px;
+        background: rgba(255, 255, 255, .98);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--line);
+        box-shadow: 0 20px 30px rgba(14, 26, 43, .08);
+        transform: translateY(-12px);
+        opacity: 0;
+        visibility: hidden;
+        transition: transform .3s var(--ease), opacity .3s, visibility .3s;
+      }
+      .nav-links.open {
+        transform: none;
+        opacity: 1;
+        visibility: visible;
+      }
+      .nav-links a { padding: 13px 16px; font-size: 16px; }
+
+      .stat-grid { grid-template-columns: 1fr; }
+      .about-card { padding: 30px 24px; }
+      .tl-card { padding: 22px 20px; }
+      .hero .cta { flex-direction: column; align-items: center; }
+      .btn { width: min(320px, 100%); }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ===================== 顶部导航栏 ===================== -->
+  <header class="navbar" id="navbar">
+    <div class="container">
+      <a class="brand" href="#home">
+        <span class="cn">付磬菘</span>
+        <span class="en">Fu Qingsong</span>
+      </a>
+
+      <nav class="nav-links" id="navLinks" aria-label="主导航">
+        <a href="#about">关于我</a>
+        <a href="#academic">学业成绩</a>
+        <a href="#research">科研经历</a>
+        <a href="#contact">联系我</a>
+      </nav>
+
+      <button class="nav-toggle" id="navToggle" aria-label="切换菜单" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===================== 首屏 Hero ===================== -->
+    <section class="hero" id="home">
+      <div class="container">
+        <p class="eyebrow fade">Personal Portfolio</p>
+        <h1 class="fade">你好，我是 <span class="grad">付磬菘</span></h1>
+        <p class="subtitle fade">北京邮电大学 · 未来学院 · 2025级本科生</p>
+        <p class="intro fade">踏实深耕，向新而行。在数学基础与大模型技术的交叉点上持续探索。</p>
+        <div class="cta fade">
+          <!-- TODO: 如有简历 PDF，把下方 href 替换为简历链接 -->
+          <a class="btn btn-primary" href="#academic">查看简历</a>
+          <a class="btn btn-ghost" href="#contact">联系我</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 关于我 ===================== -->
+    <section id="about">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="tag">个人简介</span>
+          <h2>关于我</h2>
+        </div>
+        <div class="about-card reveal">
+          <p>
+            男，2007年10月生，<strong>共青团团员</strong>。北京邮电大学未来学院
+            <strong>计算机类（元班）</strong>2025级本科生。
+          </p>
+          <p>
+            热爱英文歌曲、烹饪烘焙与爬山徒步。喜欢在课余时学技术，
+            将数学理论转化为实际应用。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 学业成绩 ===================== -->
+    <section id="academic">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="tag">核心指标</span>
+          <h2>学业成绩</h2>
+        </div>
+
+        <!-- 四个数据卡片 -->
+        <div class="stat-grid">
+          <div class="stat-card reveal">
+            <div class="stat-value">1 <small>/ 53</small></div>
+            <div class="stat-label">专业排名</div>
+            <div class="stat-note">加权平均分 88.99</div>
+          </div>
+          <div class="stat-card reveal">
+            <div class="stat-value">3.67 <small>/ 4.0</small></div>
+            <div class="stat-label">绩点 (GPA)</div>
+            <div class="stat-note">Grade Point Average</div>
+          </div>
+          <div class="stat-card reveal">
+            <div class="stat-value">604 <small>/ 468</small></div>
+            <div class="stat-label">英语四六级</div>
+            <div class="stat-note">四级 / 六级</div>
+          </div>
+          <div class="stat-card reveal">
+            <div class="stat-value">4 <small>/ 53</small></div>
+            <div class="stat-label">综合考评</div>
+            <div class="stat-note">综合素质测评</div>
+          </div>
+        </div>
+
+        <!-- 高分课程标签云 -->
+        <div class="courses reveal">
+          <h3 class="courses-title">高分课程</h3>
+          <div class="tag-cloud">
+            <span class="course-tag">数学分析(二) <b>96</b></span>
+            <span class="course-tag">数学分析选讲(二) <b>98</b></span>
+            <span class="course-tag">高等代数(下) <b>94</b></span>
+            <span class="course-tag">空间解析几何 <b>94</b></span>
+            <span class="course-tag">大学物理B(上) <b>94</b></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 科研与项目经历 ===================== -->
+    <section id="research">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="tag">科研探索</span>
+          <h2>科研与项目经历</h2>
+        </div>
+
+        <div class="timeline">
+          <!-- 项目 1 -->
+          <div class="tl-item reveal">
+            <div class="tl-card">
+              <div class="tl-meta">
+                <span class="badge">2026年大创项目</span>
+                <span class="badge ghost">负责人</span>
+              </div>
+              <h3>《基于辩论机制的多Agent协作推理增强系统》</h3>
+              <p class="advisor">指导老师：全辉</p>
+              <p>负责项目选题与统筹。</p>
+            </div>
+          </div>
+
+          <!-- 项目 2 -->
+          <div class="tl-item reveal">
+            <div class="tl-card">
+              <div class="tl-meta">
+                <span class="badge">学院双创项目</span>
+                <span class="badge ghost">核心成员</span>
+              </div>
+              <h3>《医学大模型研究中的多模态智能中医系统》</h3>
+              <p class="advisor">指导老师：李若泰</p>
+              <p>参与数据处理与模型应用研究。</p>
+            </div>
+          </div>
+
+          <!-- 项目 3 -->
+          <div class="tl-item reveal">
+            <div class="tl-card">
+              <div class="tl-meta">
+                <span class="badge">雏燕计划</span>
+                <span class="badge ghost">成员 · 已结项</span>
+              </div>
+              <h3>《Code Quest》</h3>
+            </div>
+          </div>
+
+          <!-- 项目 4 -->
+          <div class="tl-item reveal">
+            <div class="tl-card">
+              <div class="tl-meta">
+                <span class="badge">自主探索</span>
+              </div>
+              <h3>自我驱动 · 持续精进</h3>
+              <p>
+                自学大语言模型与Agent课程；搭建两个数学学习平台（含Coze平台搭建）；
+                基于阿里云服务器开发部署个人网站。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== 页脚 ===================== -->
+  <footer class="footer" id="contact">
+    <div class="container">
+      <p class="thanks">感谢您的访问。</p>
+      <div class="contact">
+        <span>电话 <a href="tel:13668750688">13668750688</a></span>
+        <span>邮箱 <a href="mailto:2025212596@bupt.cn">2025212596@bupt.cn</a></span>
+      </div>
+      <p class="motto">“We must know. We will know.” —— David Hilbert</p>
+      <p class="copyright">© 2026 付磬菘. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // =========================================================
+    // 1. 移动端导航菜单开关
+    // =========================================================
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    navToggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      navToggle.classList.toggle('active', open);
+      navToggle.setAttribute('aria-expanded', String(open));
+    });
+
+    // 点击导航项后自动收起菜单
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        navToggle.classList.remove('active');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // =========================================================
+    // 2. 导航栏滚动时加阴影
+    // =========================================================
+    const navbar = document.getElementById('navbar');
+    const onScroll = () => navbar.classList.toggle('scrolled', window.scrollY > 10);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll(); // 初始执行一次
+
+    // =========================================================
+    // 3. 滚动到可视区域时渐显（Fade-in）
+    // =========================================================
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target); // 只触发一次
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -48px 0px' }
+    );
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>
